@@ -27,7 +27,7 @@ export default function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = "https://public-holidays7.p.rapidapi.com/2023/US";
+      const url = "https://date.nager.at/api/v3/publicholidays/2023/AT";
       const options = {
         method: "GET",
         headers: {
