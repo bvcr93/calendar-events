@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rdrDay {
+  width: 200px;
+  height: 100px;
+  line-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rdrDayNumber {
+  font-size: 1.5em;
+  border: 1px solid grey;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(59, 179, 59);
+}
+
+.rdrWeekDay,
+.rdrMonthAndYearWrapper {
+  font-size: 1.5em;
+}
+.rdrCalendarWrapper {
+  width: 100vw;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.rdrMonth {
+  width: calc(100vw / 2);
+}
+.rdrWeekDays {
+  background-color: rgb(165, 238, 205);
+  color: rgb(47, 218, 112);
+}
+.rdrWeekDay {
+  color: rgb(30, 150, 80);
+}
+.rdrDay:active,
+.rdrDay:focus {
+  background-color: transparent;
+  outline: none;
+}
+
+.rdrMonthsVertical {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.rdrDefinedRangesWrapper {
+  display: none;
+}
+.rdrDateDisplayWrapper {
+  display: none;
+}
