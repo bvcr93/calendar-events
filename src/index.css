@@ -1,14 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+* {
+  box-sizing: border-box;
+
+}
+
 
 .rdrDay {
-  width: 200px;
   height: 100px;
-  line-height: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+
 }
 
 .rdrDayNumber {
@@ -27,8 +28,6 @@
 }
 .rdrCalendarWrapper {
   width: 100vw;
-  box-sizing: border-box;
-  overflow: auto;
 }
 
 .rdrMonth {
@@ -37,20 +36,16 @@
 .rdrWeekDays {
   background-color: rgb(165, 238, 205);
   color: rgb(47, 218, 112);
+  width: calc(100vw / 2);
+  width: 100%;
+  font-size: 12px;
 }
 .rdrWeekDay {
   color: rgb(30, 150, 80);
 }
-.rdrDay:active,
-.rdrDay:focus {
-  background-color: transparent;
-  outline: none;
-}
 
 .rdrMonthsVertical {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 }
@@ -59,5 +54,8 @@
   display: none;
 }
 .rdrDateDisplayWrapper {
+  display: none;
+}
+.rdrDayPassive {
   display: none;
 }

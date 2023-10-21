@@ -3,51 +3,34 @@ import { DateRangePicker, Range, RangeKeyDict } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 
-interface DateRange extends Range {
-  key: string;
+interface Holiday {
+  date: string;
+  name: string;
 }
 
 export default function App() {
-  const [selectionRange, setSelectionRange] = useState<DateRange>({
+  const [selectionRange, setSelectionRange] = useState<Range>({
     startDate: new Date(),
     endDate: new Date(),
     key: "selection",
   }); //from the docs
 
-  const [holidays, setHolidays] = useState<Map<string, string>>(new Map());
+  const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
   console.log(selectedDate);
-  const handleSelect = (ranges: RangeKeyDict) => {
-    const range = ranges["selection"] as DateRange;
-    if (range) {
-      range.endDate = range.startDate;
-      setSelectionRange(range);
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
       const url = "https://date.nager.at/api/v3/publicholidays/2023/AT";
-      const options = {
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Key":
-            "6a2c45b0c7msh9003a768797bbe7p19e221jsna0f7ed43603d",
-          "X-RapidAPI-Host": "public-holidays7.p.rapidapi.com",
-        },
-      };
 
       try {
-        const response = await fetch(url, options);
+        const response = await fetch(url);
         const result = await response.json();
         console.log("result data: ", result);
-        if (result && Array.isArray(result)) {
-          const holidayMap = new Map(
-            result.map((holiday) => [holiday.date, holiday.name])
-          );
-          console.log("holidayMap: ", holidayMap);
-          setHolidays(holidayMap);
-        }
+        setHolidays(result);
+
+        setHolidays(result);
       } catch (error) {
         console.error(error);
       }
@@ -55,23 +38,35 @@ export default function App() {
 
     fetchData();
   }, []);
-  function renderDateContent(date: Date) {
+
+  const handleSelect = (ranges: RangeKeyDict) => {
+    const range = ranges["selection"] as Range;
+
+    setSelectionRange(range);
+    console.log("range: ", range);
+  };
+
+  function dayCellContent(date: Date) {
     const dateString = date.toLocaleDateString("en-CA");
-    const holidayName = holidays.get(dateString);
+    const holiday = holidays.find((h) => h.date === dateString);
+    const holidayName = holiday?.name;
 
     return (
       <div
-        className=" w-full h-full mt-14"
+        className="w-full h-full mt-12"
         style={{ textAlign: "center", lineHeight: "normal" }}
         onClick={() => setSelectedDate(dateString)}
       >
         <div>{date.getDate()}</div>
         {holidayName && (
-          <div className="text-blue-500 font-bold text-sm">{holidayName}</div>
+          <div className="text-green-700 font-semibold text-xs bg-slate-200 rounded px-2 mx-1 h-[40px] flex items-center justify-center">
+            {holidayName}
+          </div>
         )}
       </div>
     );
   }
+  const selectedHoliday = holidays.find((h) => h.date === selectedDate);
 
   return (
     <div className="">
@@ -79,12 +74,13 @@ export default function App() {
         ranges={[selectionRange]}
         onChange={handleSelect}
         // @ts-ignore
-        dayContentRenderer={renderDateContent}
+        dayContentRenderer={dayCellContent}
         rangeColors={["transparent"]}
+        weekStartsOn={1}
       />
-      {selectedDate && holidays.get(selectedDate) && (
-        <div className="w-full text-center text-2xl text-blue-500">
-          {holidays.get(selectedDate)}
+      {selectedHoliday && (
+        <div className="w-full text-center text-2xl text-green-700">
+          {selectedHoliday.name}
         </div>
       )}
     </div>
