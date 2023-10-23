@@ -5,28 +5,22 @@ interface DayCellProps {
   day: number;
   date: Date;
   holidays: Holiday[];
-  onClick: (holiday: Holiday) => void;
+  onClick: (holiday: Holiday | undefined) => void;
 }
 
 export function DayCell({ day, date, holidays, onClick }: DayCellProps) {
   const cellDate = format(date, "yyyy-MM-dd");
 
   const holiday = holidays.find((h) => h.date === cellDate);
-
-  const handleHolidayClick = () => {
-    if (holiday) {
-      onClick(holiday);
-    }
-  };
-
+  
   return (
     <div
-      className="flex-grow border border-slate-200 h-20 flex flex-col items-end justify-start px-2"
-      onClick={handleHolidayClick}
+      className="flex-grow border border-slate-200 h-20 flex flex-col items-end justify-start px-2 overflow-hidden"
+      onClick={() => onClick(holiday)}
     >
-      {day}
+      <span className="day-number text-base sm:text-sm">{day}</span>
       {holiday && (
-        <span className="text-xs font-semibold text-emerald-600 bg-slate-200 px-2 py-2 rounded-md cursor-pointer w-full text-center">
+        <span className="text-xs font-semibold text-emerald-600 bg-slate-200 px-2 py-1 mt-2 rounded-md cursor-pointer w-full text-center truncate sm:whitespace-normal sm:text-2xs holiday-name">
           {holiday.name}
         </span>
       )}

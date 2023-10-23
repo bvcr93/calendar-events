@@ -12,7 +12,7 @@ export interface Holiday {
 }
 export default function App() {
   const [holidays, setHolidays] = useState<Holiday[]>([]);
-  const [error, setError] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       const url = "https://date.nager.at/api/v3/publicholidays/2023/AT";
@@ -22,11 +22,8 @@ export default function App() {
         const result = await response.json();
         console.log("result data: ", result);
         setHolidays(result);
-        setError(false);
-
-        setHolidays(result);
       } catch (error) {
-        setError(true);
+        console.error(error);
       }
     };
 
@@ -39,7 +36,6 @@ export default function App() {
         <Route path="/:date" element={<Calendar holidays={holidays} />} />
         <Route path="/" element={<Calendar holidays={holidays} />} />
       </Routes>
-      {error && <div>Something went wrong</div>}
     </div>
   );
 }
@@ -47,7 +43,16 @@ interface CalendarProps {
   holidays: Holiday[];
 }
 function Calendar({ holidays }: CalendarProps) {
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
   const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(2023);
@@ -87,10 +92,23 @@ function Calendar({ holidays }: CalendarProps) {
       setCurrentMonth((prev) => prev + 1);
     }
   };
-
+  // Get the day of the week for the first day of the current month (0 is Sunday, 6 is Saturday).
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  console.log("first day in month", firstDayOfMonth);
+  // Adjust the starting day of the week for a Monday-start calendar.
+  // If the month starts on Sunday, adjust it to be considered as 6 (last day of the week).
+  // For other days, subtract 1 to fit a Monday-start week (0 is Monday, 6 is Sunday).
   const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-  // if first day of month is Sunday, set it to 6, otherwise subtract 1
+
+  // Get the day of the week for the last day of the current month.
+  const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDay();
+
+  // Adjust the ending day of the week similar to the starting day adjustment.
+  const adjustedLastDay = lastDayOfMonth === 0 ? 6 : lastDayOfMonth - 1;
+
+  // Calculate the number of inactive cells needed at the end of the calendar grid
+  // to complete the last week of the month.
+  const inactiveEndDays = 6 - adjustedLastDay;
 
   return (
     <>
@@ -136,21 +154,30 @@ function Calendar({ holidays }: CalendarProps) {
                 className="flex-grow border border-slate-200 h-20"
               ></div>
             ))}
-          {/* inactive days in month */}
-
           {Array(daysThisMonth)
             .fill(null)
             .map((_, day) => (
               <DayCell
                 onClick={(holiday) => {
-                  setSelectedHoliday(holiday);
-                  navigate(`/${holiday.date}`);
+                  setSelectedHoliday(holiday || null);
+                  // holiday is possibly null if we click somewhere where it doesnt exist
+                  if (holiday) {
+                    navigate(`/${holiday.date}`);
+                  }
                 }}
                 day={day + 1}
                 key={day + 1}
                 date={new Date(currentYear, currentMonth, day + 1)}
                 holidays={holidays}
               />
+            ))}
+          {Array(inactiveEndDays)
+            .fill(null)
+            .map((_, idx) => (
+              <div
+                key={idx}
+                className="flex-grow border border-slate-200 h-20"
+              ></div>
             ))}
         </div>
       </div>
