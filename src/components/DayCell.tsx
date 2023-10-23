@@ -1,25 +1,33 @@
 import { Holiday } from "../App";
+import format from "date-fns/format";
 interface DayCellProps {
   day: number;
-  date: Date; // change here
+  date: Date;
   holidays: Holiday[];
+  onClick: (holiday: Holiday) => void;
 }
 
-export function DayCell({ day, date, holidays }: DayCellProps) {
-  const cellDate = `${date.getFullYear()}-${String(
-    date.getMonth() + 1
-  ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+export function DayCell({ day, date, holidays, onClick }: DayCellProps) {
+  const cellDate = format(date, "yyyy-MM-dd");
 
-  // Check if the current cell date is a holiday
   const holiday = holidays.find((h) => h.date === cellDate);
+
+  const handleHolidayClick = () => {
+    if (holiday) {
+      onClick(holiday);
+    }
+  };
 
   return (
     <div
-      className={`border border-emerald-400 h-16 w-24 flex flex-col justify-end px-2`}
+      className="flex-grow border border-slate-200 h-20 flex flex-col items-end justify-start px-2"
+      onClick={handleHolidayClick}
     >
       {day}
       {holiday && (
-        <span className="text-xs text-red-600 mt-2">{holiday.name}</span>
+        <span className="text-xs font-semibold text-emerald-600 bg-slate-200 px-2 py-2 rounded-md cursor-pointer w-full text-center">
+          {holiday.name}
+        </span>
       )}
     </div>
   );
