@@ -92,22 +92,16 @@ function Calendar({ holidays }: CalendarProps) {
       setCurrentMonth((prev) => prev + 1);
     }
   };
-  // Get the day of the week for the first day of the current month (0 is Sunday, 6 is Saturday).
+
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   console.log("first day in month", firstDayOfMonth);
-  // Adjust the starting day of the week for a Monday-start calendar.
-  // If the month starts on Sunday, adjust it to be considered as 6 (last day of the week).
-  // For other days, subtract 1 to fit a Monday-start week (0 is Monday, 6 is Sunday).
+
   const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
-  // Get the day of the week for the last day of the current month.
   const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDay();
 
-  // Adjust the ending day of the week similar to the starting day adjustment.
   const adjustedLastDay = lastDayOfMonth === 0 ? 6 : lastDayOfMonth - 1;
 
-  // Calculate the number of inactive cells needed at the end of the calendar grid
-  // to complete the last week of the month.
   const inactiveEndDays = 6 - adjustedLastDay;
 
   return (
