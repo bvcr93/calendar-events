@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { CurrentMonthHeader } from "./components/CurrentMonthHeader";
 import { DayCell } from "./components/DayCell";
 import { WeekHeader } from "./components/WeekHeader";
-
+import { useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 export interface Holiday {
   date: string;
   name: string;
@@ -11,7 +12,7 @@ export interface Holiday {
 }
 export default function App() {
   const [holidays, setHolidays] = useState<Holiday[]>([]);
-
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const url = "https://date.nager.at/api/v3/publicholidays/2023/AT";
@@ -21,10 +22,11 @@ export default function App() {
         const result = await response.json();
         console.log("result data: ", result);
         setHolidays(result);
+        setError(false);
 
         setHolidays(result);
       } catch (error) {
-        console.error(error);
+        setError(true);
       }
     };
 
@@ -32,8 +34,12 @@ export default function App() {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto h-screen flex flex-col items-center justify-center space-y-4">
-      <Calendar holidays={holidays} />
+    <div className="max-w-6xl mx-auto h-screen flex flex-col items-center justify-center space-y-4 px-5">
+      <Routes>
+        <Route path="/:date" element={<Calendar holidays={holidays} />} />
+        <Route path="/" element={<Calendar holidays={holidays} />} />
+      </Routes>
+      {error && <div>Something went wrong</div>}
     </div>
   );
 }
@@ -42,7 +48,7 @@ interface CalendarProps {
 }
 function Calendar({ holidays }: CalendarProps) {
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
+  const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(2023);
   const daysThisMonth = getDaysInMonth(new Date(currentYear, currentMonth));
@@ -106,15 +112,15 @@ function Calendar({ holidays }: CalendarProps) {
             </div>
           )}
         </div>
-        <div className="bg-slate-100">
-          <CurrentMonthHeader
-            handleNextMonth={handleNextMonth}
-            handlePrevMonth={handlePrevMonth}
-            months={months}
-            currentMonth={currentMonth}
-            currentYear={currentYear}
-          />
-        </div>
+
+        <CurrentMonthHeader
+          handleNextMonth={handleNextMonth}
+          handlePrevMonth={handlePrevMonth}
+          months={months}
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+        />
+
         <div className="flex rounded border">
           {daysOfWeek.map((weekDay) => (
             <WeekHeader weekDay={weekDay} key={weekDay} />
@@ -136,7 +142,10 @@ function Calendar({ holidays }: CalendarProps) {
             .fill(null)
             .map((_, day) => (
               <DayCell
-                onClick={(holiday) => setSelectedHoliday(holiday)}
+                onClick={(holiday) => {
+                  setSelectedHoliday(holiday);
+                  navigate(`/${holiday.date}`);
+                }}
                 day={day + 1}
                 key={day + 1}
                 date={new Date(currentYear, currentMonth, day + 1)}

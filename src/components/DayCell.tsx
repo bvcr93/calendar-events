@@ -1,5 +1,6 @@
-import { Holiday } from "../App";
 import format from "date-fns/format";
+import { Holiday } from "../App";
+
 interface DayCellProps {
   day: number;
   date: Date;
