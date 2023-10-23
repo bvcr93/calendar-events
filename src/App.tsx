@@ -85,6 +85,7 @@ function Calendar({ holidays }: CalendarProps) {
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
   // if first day of month is Sunday, set it to 6, otherwise subtract 1
+
   return (
     <>
       <div className="w-full h-[700px]">
