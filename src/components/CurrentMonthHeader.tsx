@@ -15,7 +15,7 @@ export function CurrentMonthHeader({
 }: CurrentMonthHeaderProps) {
   return (
     <div className="w-full flex items-center justify-between h-12">
-      <div className="font-bold">
+      <div className="current-month">
         {months[currentMonth]} {currentYear}
       </div>
       <div className="flex items-center gap-5">

@@ -12,9 +12,8 @@ export interface Holiday {
 }
 export default function App() {
   const [holidays, setHolidays] = useState<Holiday[]>([]);
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchHolidays = async () => {
       const url = "https://date.nager.at/api/v3/publicholidays/2023/AT";
 
       try {
@@ -27,11 +26,11 @@ export default function App() {
       }
     };
 
-    fetchData();
+    fetchHolidays();
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto h-screen flex flex-col items-center justify-center space-y-4 px-5">
+    <div className="max-w-6xl mx-auto h-screen flex flex-col items-center justify-center space-y-4 px-5 title">
       <Routes>
         <Route path="/:date" element={<Calendar holidays={holidays} />} />
         <Route path="/" element={<Calendar holidays={holidays} />} />
@@ -107,17 +106,23 @@ function Calendar({ holidays }: CalendarProps) {
   return (
     <>
       <div className="w-full h-[700px]">
-        <h1 className="w-full text-center text-3xl font-mono mb-20">
-          Holidays in 2023
+        <h1 className="w-full text-center text-4xl mb-20">
+          Holidays in 2023 (Austria)
         </h1>
         <div className="w-full text-center my-10">
           {selectedHoliday && (
-            <div className="">
-              <span className="">Selected Holiday: </span>
-              <span className="font-semibold">{selectedHoliday.name}</span>
+            <div className="bg-gray-100 p-4 rounded-lg shadow-sm transition duration-300 ease-in-out hover:shadow-md">
+              <span className="text-gray-700 text-base mr-1">
+                Selected holiday:{" "}
+              </span>
+              <span className="text-emerald-500 text-lg font-semibold">
+                {selectedHoliday.name}
+              </span>
               <div>
-                <span className="">Local name: </span>
-                <span className="font-semibold">
+                <span className="text-gray-700 text-base mr-1">
+                  Local name:{" "}
+                </span>
+                <span className="text-emerald-500 text-lg font-semibold">
                   {selectedHoliday.localName}
                 </span>
               </div>

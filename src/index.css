@@ -2,3 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+.title {
+  font-family: "Futura";
+  margin-bottom: 40px;
+  padding: 10px;
+  background-image: linear-gradient(
+    to right,
+    rgba(7, 27, 82, 1),
+    rgba(0, 128, 128, 1)
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+  opacity: 0;
+  transform: translateY(100px);
+  animation: slideUpFadeIn 2s ease-in-out forwards;
+}
+
+@keyframes slideUpFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.current-month {
+  font-family: "Arial", sans-serif;
+  font-size: 22px;
+  color: rgb(68, 68, 68);
+  margin: 5px 0;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
