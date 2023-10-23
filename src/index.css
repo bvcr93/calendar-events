@@ -1,61 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-* {
-  box-sizing: border-box;
 
-}
-
-
-.rdrDay {
-  height: 100px;
-
-}
-
-.rdrDayNumber {
-  font-size: 1.5em;
-  border: 1px solid grey;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgb(59, 179, 59);
-}
-
-.rdrWeekDay,
-.rdrMonthAndYearWrapper {
-  font-size: 1.5em;
-}
-.rdrCalendarWrapper {
-  width: 100vw;
-}
-
-.rdrMonth {
-  width: calc(100vw / 2);
-}
-.rdrWeekDays {
-  background-color: rgb(165, 238, 205);
-  color: rgb(47, 218, 112);
-  width: calc(100vw / 2);
-  width: 100%;
-  font-size: 12px;
-}
-.rdrWeekDay {
-  color: rgb(30, 150, 80);
-}
-
-.rdrMonthsVertical {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.rdrDefinedRangesWrapper {
-  display: none;
-}
-.rdrDateDisplayWrapper {
-  display: none;
-}
-.rdrDayPassive {
-  display: none;
+body {
+  @apply bg-gray-900;
 }
